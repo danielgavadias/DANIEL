@@ -7,7 +7,7 @@ char ContinuarCalc, GRopcao = 's', GRexclusao = 0, lixo;
 
 void calculadora()
 {
-    //system("cls");
+    system("cls");
     
     printf("\n====CALCULADORA====\n");
     printf("\nQual operação desejas resolver? ");
