@@ -1,0 +1,3 @@
+ENTRADA: Placa:         qw | VeiculoC/M: c | horasPRV: 3 | valorPH: 25.00
+ENTRADA: Placa:        qwe | VeiculoC/M: m | horasPRV: 8 | valorPH: 44.00
+SAÍDA: Placa:         qw | VeiculoC/M: c | horasPRV: 3 | valorPH: 25.000000

@@ -123,7 +123,7 @@ void EstacionamentoCodigo()
 //==========================================================================================================================================================================
 int registroEst()
 {
-    if(quantVT>20)
+    if(quantVT<20)
     {
         EstInfoVeic = fopen("arquivos/EstInfoVeic.txt", "a");
         EstHistorico = fopen("arquivos/EstHistorico.txt", "a");
