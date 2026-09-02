@@ -14,19 +14,38 @@ int i, dia;
 //==========================================================================================================================================================================
 FILE *EstHistorico;
 FILE *EstInfoVeic;
-FILE *EstfatDiario;
+FILE *EstGuardarVariaveis;
 //==========================================================================================================================================================================
+void carregarV()
+{
+        EstGuardarVariaveis = fopen("arquivos/EstGuardarVariaveis.txt", "r");
+        if (EstGuardarVariaveis == NULL)
+        {
+            printf("Erro ao abrir o arquivo!\n");
+            return;
+        }
+        fscanf(EstGuardarVariaveis,"%d %d %d %f %f %f %f %d", &quantC, &quantM, &quantVT, &fatPHCT, &fatPHMT, &fatT, &fatD, &dia);
+        fclose(EstGuardarVariaveis);   
+}
 void estacionamento()
+{
+    carregarV();
+    EstacionamentoCodigo();
+}
+//==========================================================================================================================================================================
+void EstacionamentoCodigo()
 {
     //==========================================================================================================================================================================
     system("cls");
     //==========================================================================================================================================================================
     printf("\n===== ESTACIONAMENTO SENAI =====\n");
+    printf("Dia %d", dia);
     printf("\n1 - REGISTRAR ENTRADA");
     printf("\n2 - REGISTRAR SAÍDA");
     printf("\n3 - CONSULTAR SITUAÇÃO");
     printf("\n4 - EXIBIR FATURAMENTO");
     printf("\n5 - ENCERRAR O DIA");
+    printf("\n6 - SAIR");
     printf("\n0 - APAGAR TODOS OS DADOS DO SISTEMA\n");
 
     printf("\nDigite aqui: ");
@@ -62,9 +81,9 @@ void estacionamento()
         switch(EstApagarD)
         {
         case 's':
-            EstHistorico = fopen("arquivos/EstHistorico.txt", "w"); fprintf(EstHistorico, ""); fclose(EstHistorico);
-            EstfatDiario = fopen("arquivos/EstfatDiario.txt", "w"); fprintf(EstfatDiario, ""); fclose(EstfatDiario);
-            EstInfoVeic = fopen("arquivos/EstInfoVeic.txt", "w"); fprintf(EstInfoVeic, ""); fclose(EstInfoVeic);
+            EstHistorico = fopen("arquivos/EstHistorico.txt", "w"); fclose(EstHistorico);
+            EstGuardarVariaveis = fopen("arquivos/EstGuardarVariaveis.txt", "w"); fclose(EstGuardarVariaveis);
+            EstInfoVeic = fopen("arquivos/EstInfoVeic.txt", "w"); fclose(EstInfoVeic);
             fatPHVG = 0;
             fatPHCT = 0;
             fatPHMT = 0;
@@ -75,97 +94,123 @@ void estacionamento()
             quantM = 0;
             quantVT = 0;
             
+            EstGuardarVariaveis = fopen("arquivos/EstGuardarVariaveis.txt", "w");
+            fprintf(EstGuardarVariaveis, "%d %d %d %f %f %f %f %d", quantC, quantM, quantVT, fatPHCT, fatPHMT, fatT, fatD, dia);
+            fclose(EstGuardarVariaveis);
+
             printf("FINALIZADO! Digite qualquer tecla para voltar a tela inical: ");  scanf(" %c", &lixo);
-            2 estacionamento();
+            EstacionamentoCodigo();
         break;
     
         case 'n':
-             estacionamento();
+             EstacionamentoCodigo();
         break;
     
         default:
         break;
         }
     break;
-    
+    //==========================================================================================================================================================================
+    case 6:
+             printf("\nvai toma no cu\n");
+             EstGuardarVariaveis = fopen("arquivos/EstGuardarVariaveis.txt", "w");
+             fprintf(EstGuardarVariaveis, "%d %d %d %f %f %f %f %d", quantC, quantM, quantVT, fatPHCT, fatPHMT, fatT, fatD, dia);
+             fclose(EstGuardarVariaveis);
+    break;
     }
     //==========================================================================================================================================================================
 }
 //==========================================================================================================================================================================
 int registroEst()
 {
-    EstInfoVeic = fopen("arquivos/EstInfoVeic.txt", "a");
-    EstHistorico = fopen("arquivos/EstHistorico.txt", "a");
-    
-    //system("cls");
-    //==========================================================================================================================================================================
-    if (EstHistorico == NULL)
+    if(quantVT>20)
     {
-        printf("\nErro ao abrir o arquivo!H\n");
-    }
-    if (EstInfoVeic == NULL)
-    {
-        printf("\nErro ao abrir o arquivo!I\n");
-    }
-    //==========================================================================================================================================================================
-    printf("\n===== REGISTRO =====\n");
-
-    printf("\nQual a placa do veiculo que deseja registrar? ");
-    scanf("%10s", placa);
-
-    printf("Qual o tipo do veiculo que deseja registrar?(c/m) ");
-    scanf(" %c", &CM);
-
-    while (CM != 'c' && CM != 'm')
-    {
-        printf("Apenas carros(c) e motos(m) são validos! Digite um tipo de veículo válido: ");
-        scanf(" %c", &CM);
-    }
-
-    printf("Quantas horas pretende ficar? ");
-    scanf("%d", &horasPRV);
-    switch (CM) //valorPH e quant++
-    {
-        case 'c':
-            fatPHVG = (horasPRV * 5) + 10;
-            quantC++;
-        break;
-        case 'm':
-            fatPHVG = (horasPRV * 4) + 12;
-            quantM++;
-        break;
-    }
-
-    fatD = fatD + fatPHVG;
-    fatT = fatT + fatD;
-    quantVT++;
-    fprintf(EstInfoVeic, "Placa: %10s | VeiculoC/M: %c | horasPRV: %d | valorPH: %.2f\n", placa, CM, horasPRV, fatPHVG);
-    fprintf(EstHistorico, "ENTRADA: Placa: %10s | VeiculoC/M: %c | horasPRV: %d | valorPH: %.2f\n", placa, CM, horasPRV, fatPHVG);
-
-    //==========================================================================================================================================================================
-    printf("\nREGISTRO COMPLETO.\n");
-    //==========================================================================================================================================================================
-    fclose(EstHistorico);
-    fclose(EstInfoVeic);
-    //==========================================================================================================================================================================
-    printf("\nDeseja fazer outro registro?(s/n) "); 
-        char EstContReg;
-        scanf(" %c", &EstContReg);
-        switch (EstContReg)
+        EstInfoVeic = fopen("arquivos/EstInfoVeic.txt", "a");
+        EstHistorico = fopen("arquivos/EstHistorico.txt", "a");
+        
+        //system("cls");
+        //==========================================================================================================================================================================
+        if (EstHistorico == NULL)
         {
-        case 's':
-            registroEst();
-        break;
-    
-        default:
-        estacionamento();
-        break;
+            printf("\nErro ao abrir o arquivo!H\n");
         }
+        if (EstInfoVeic == NULL)
+        {
+            printf("\nErro ao abrir o arquivo!I\n");
+        }
+        //==========================================================================================================================================================================
+        printf("\n===== REGISTRO =====\n");
+    
+        printf("\nQual a placa do veiculo que deseja registrar? ");
+        scanf("%9s", placa);
+        
+        printf("Qual o tipo do veiculo que deseja registrar?(c/m) ");
+        scanf(" %c", &CM);
+    
+        while (CM != 'c' && CM != 'm')
+        {
+            printf("Apenas carros(c) e motos(m) são validos! Digite um tipo de veículo válido: ");
+            scanf(" %c", &CM);
+        }
+    
+        printf("Quantas horas pretende ficar? ");
+        scanf("%d", &horasPRV);
+        switch (CM) //valorPH e quant++
+        {
+            case 'c':
+                fatPHVG = (horasPRV * 5) + 10;
+                fatD += fatPHVG;
+                fatPHCT += fatPHVG;
+                quantC++;
+            break;
+            case 'm':
+                fatPHVG = (horasPRV * 4) + 12;
+                fatD += fatPHVG;
+                fatPHMT += fatPHVG;
+                quantM++;
+            break;
+        }
+        fatT += fatPHVG;
+        
+        quantVT++;
+        fprintf(EstInfoVeic, "Placa: %10s | VeiculoC/M: %c | horasPRV: %d | valorPH: %.2f\n", placa, CM, horasPRV, fatPHVG);
+        fprintf(EstHistorico, "ENTRADA: Placa: %10s | VeiculoC/M: %c | horasPRV: %d | valorPH: %.2f\n", placa, CM, horasPRV, fatPHVG);
+    
+        //==========================================================================================================================================================================
+        printf("\nREGISTRO COMPLETO.\n");
+        //==========================================================================================================================================================================
+        fclose(EstHistorico);
+        fclose(EstInfoVeic);
+        //==========================================================================================================================================================================
+        printf("\nDeseja fazer outro registro?(s/n) "); 
+            char EstContReg;
+            scanf(" %c", &EstContReg);
+            switch (EstContReg)
+            {
+            case 's':
+                registroEst();
+            break;
+        
+            default:
+            EstacionamentoCodigo();
+            break;
+        }
+    }
+    else
+    {
+        printf("ESTACIONAMENTO LOTADO!");
+        printf("\n\nDigite qualquer tecla para voltar para o menu: ");
+        scanf(" %c", &lixo);
+        EstacionamentoCodigo();
+    }
+    
         return 0;
 }
 //==========================================================================================================================================================================
 int saidaEst()
 {
+    if((quantC+quantM) != 0)
+    {
     EstHistorico = fopen("arquivos/EstHistorico.txt", "r");
     EstInfoVeic = fopen("arquivos/EstInfoVeic.txt", "r");
     //system("cls");
@@ -209,7 +254,6 @@ int saidaEst()
             if (i != QualV)
                 {
                     fprintf(EstTemporario, "Placa: %10s | VeiculoC/M: %c | horasPRV: %d | valorPH: %f\n", placa, CM, horasPRV, fatPHVG);
-                    fatPHCT = fatPHCT + fatPHVG;
                 }
             
             else
@@ -219,6 +263,7 @@ int saidaEst()
                     {
                         quantC--;
                     }
+                    
                     else
                     {
                         quantM--;
@@ -242,10 +287,18 @@ int saidaEst()
         break;
     
         default:
-            estacionamento();
+            EstacionamentoCodigo();
         break;
         }
-        return 0;
+    }
+    else
+    {
+        printf("\nImpossivel realizar saídas com o estacionamento vazio.");
+        printf("\n\nDigite qualquer tecla para voltar para o menu: ");
+        scanf(" %c", &lixo);
+        EstacionamentoCodigo();
+    }
+    return 0;
 }
 //==========================================================================================================================================================================
 int consultarEst()
@@ -263,29 +316,32 @@ int consultarEst()
     printf("\nVagas ocupadas: %d/20", quantC + quantM);
     printf("\nVagas livres: %d/20", 20 - (quantC + quantM));
     printf("\nQuantidade total de veículos que já passaram pelo estacionamento Senai: %d",  quantVT);
-    printf("\nFaturamento total acumulado: ");
+    printf("\nFaturamento total acumulado: %.2f", fatT);
 
-    printf("Digite qualquer tecla para voltar para o menu: ");
+    printf("\n\nDigite qualquer tecla para voltar para o menu: ");
     scanf(" %c", &lixo);
-    estacionamento();
+    fclose(EstHistorico);
+    EstacionamentoCodigo();
 }
 //==========================================================================================================================================================================
 int faturamentoEst()
 {
-    fatD = (fatPHCT+fatPHMT);
     EstHistorico = fopen("arquivos/EstHistorico.txt", "r");
     printf("\n=====SITUAÇÂO GERAL =====\n");
 
     printf("COMO É FEITA A COBRANÇA: ");
     printf("\nCARROS : (HORAS PREVISTAS * 5) + 10(TAXA FIXA)");
     printf("\nMOTOS: (HORAS PREVISTAS * 4) + 12(TAXA FIXA)\n");
-    printf("\nFaturamento sobre as motos: %f", fatPHMT);
-    printf("\nFaturamento sobre os carros: %f", fatPHCT);
-    printf("\nFaturamento do Dia(%d): %f", dia, fatD);
+    
+    printf("\nFaturamento sobre as motos: %.2f", fatPHMT);
+    printf("\nFaturamento sobre os carros: %.2f", fatPHCT);
+    printf("\nFaturamento do Dia(%d): %.2f", dia, fatD);
+    printf("\nFaturamento Total: %f", fatT);
 
     printf("\nDigite qualquer tecla para voltar para o menu: ");
     scanf(" %c", &lixo);
-    estacionamento();
+    fclose(EstHistorico);
+    EstacionamentoCodigo();
 }
 //==========================================================================================================================================================================
 int encerrarDiaEst()
@@ -299,18 +355,20 @@ int encerrarDiaEst()
         switch(EstApagarD)
         {
         case 's':
-            dia++;
+            
             fprintf(EstFatHistorico, "Dia %d: %.2f\n", dia, fatD);
             printf("\nFaturamento do dia: %.2f\nDia encerrado!", fatD);
+            fatD = 0;
+            dia++;
         break;
         //==========================================================================================================================================================================
         default:
             
-            estacionamento();
+            EstacionamentoCodigo();
         break;
         }
     fclose(EstFatHistorico);
     printf("Digite qualquer tecla para voltar para o menu: ");
     scanf(" %c", &lixo);
-    estacionamento();
+    EstacionamentoCodigo();
 }
